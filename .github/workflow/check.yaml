@@ -1,0 +1,25 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v5
+
+    - name: Python Install
+      id: python-install
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install Dependencies
+      id: install-dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run validation
+      id: run-validation
+      run: tox

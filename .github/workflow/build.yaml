@@ -1,0 +1,15 @@
+name: Staging Build 😍
+
+run-name: ${{ github.actor }} triggered staging build
+
+on:
+  push:
+    branches:
+    - "**"
+
+jobs:
+  Checks:
+    uses: ./.github/workflow/check.yaml
+    secrets: inherit
+
+  

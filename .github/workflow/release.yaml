@@ -1,0 +1,11 @@
+name: Release Build 🚀
+
+on:
+  push: 
+    tag:
+    - "v*"
+
+jobs:
+  Checks:
+    uses: ./.github/workflows/check.yaml
+    secrets: inherit
