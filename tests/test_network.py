@@ -1,14 +1,12 @@
 ################################################### Python Import ##################################
 
-from click.testing import CliRunner
-
 ################################################### Project Import #################################
 
 from notoil.commands.network import ip_network
 
-################################################### Main Declaration ###############################
+from tests.setup import runner
 
-runner = CliRunner()
+################################################### Main Declaration ###############################
 
 def test_ip_network_pass():
     result = runner.invoke(ip_network, ["19.205.73.132", "19.128.0.0/9"])

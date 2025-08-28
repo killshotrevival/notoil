@@ -1,24 +1,18 @@
 ################################################### Python Import ##################################
-"""
-Main entry point for the notoil CLI application.
 
-This module sets up the Click command group and registers subcommands.
-"""
-
-import click
+from pyotp import TOTP
 
 ################################################### Project Import #################################
 
-from notoil.commands.network import ip_network
 from notoil.commands.totp import get_totp
+
+from tests.setup import runner
 
 ################################################### Main Declaration ###############################
 
-@click.group()
-def cli():
+def test_get_totp():
     """
-    Main Click command group for the notoil CLI.
+    Test the get_totp command
     """
-
-cli.add_command(ip_network)
-cli.add_command(get_totp)
+    result = runner.invoke(get_totp, ["JQ3GCDISNYQBSKTW"])
+    assert TOTP("JQ3GCDISNYQBSKTW").now() in result.output
