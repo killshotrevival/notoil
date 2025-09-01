@@ -12,6 +12,8 @@ import click
 from notoil.commands.network import ip_network
 from notoil.commands.totp import get_totp
 
+from notoil.commands.k8s.main import kubernetes_main
+
 ################################################### Main Declaration ###############################
 
 @click.group()
@@ -22,3 +24,4 @@ def cli():
 
 cli.add_command(ip_network)
 cli.add_command(get_totp)
+cli.add_command(kubernetes_main)
