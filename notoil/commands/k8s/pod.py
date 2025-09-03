@@ -11,6 +11,7 @@ from kubernetes.client.api import core_v1_api
 from .ssh import ssh_into_node
 from .exec import exec_commands
 
+from notoil.utils.random import generate_random_string
 
 ################################################### Main Declaration ###############################
 
@@ -118,5 +119,82 @@ def root_execute(pod: str, container: str, namespace: str = "default"):
 
     click.echo("No container found with the given name")
 
+
+@click.command(name="cnp", help="Create a network pod")
+@click.option("--namespace", "-n", type=click.STRING, default="default")
+def create_network_pod(namespace: str = "default"):
+    """
+    Create a network pod
+
+    Args:
+        namespace (str, optional): The namespace where the pod will be created. Defaults to "default"
+
+    Returns:
+        None: Creates a network pod
+    """
+    config.load_config()
+    
+    pod = client.CoreV1Api().create_namespaced_pod(
+        namespace=namespace,
+        body=client.V1Pod(
+        api_version="v1",
+        kind="Pod",
+        metadata=client.V1ObjectMeta(
+            name=f"network-{generate_random_string(5)}",
+            namespace=namespace,
+            labels={
+                "network-pod": "true"
+            }
+        ),
+        spec=client.V1PodSpec(
+            containers=[client.V1Container(
+                name="network", 
+                image="jonlabelle/network-tools",
+                command=["sleep", "infinity"]
+            )]
+        ),
+    )
+    )
+
+    click.echo(f"Network pod created successfully in namespace {namespace}. Use the below command to connect to the pod")
+    click.echo(f"kubectl exec -it {pod.metadata.name} -n {namespace} -- bash")
+
+@click.command(name="lnp", help="List all network pods in a namespace")
+@click.option("--namespace", "-n", type=click.STRING, default="default")
+def list_network_pod(namespace: str = "default"):
+    """
+    List all network pods in a namespace
+    """
+    config.load_config()
+    pods = client.CoreV1Api().list_namespaced_pod(namespace=namespace, label_selector="network-pod=true")
+
+    for pod in pods.items:
+        click.echo(f"Pod name: {pod.metadata.name} | Pod namespace: {pod.metadata.namespace} | Pod status: {pod.status.phase}")
+
+@click.command(name="dnp", help="Delete a network pod")
+@click.option("--name", "-i", type=click.STRING, default="*")
+@click.option("--namespace", "-n", type=click.STRING, default="default")
+def delete_network_pod(name: str, namespace: str = "default"):
+    """
+    Delete a network pod
+
+    Args:
+        name (str): The name of the pod to delete
+        namespace (str, optional): The namespace of the pod. Defaults to "default"
+
+    Returns:
+        None: Deletes a network pod
+    """
+    config.load_config()
+    pods = client.CoreV1Api().list_namespaced_pod(namespace=namespace, label_selector="network-pod=true")
+
+    for pod in pods.items:
+        if name in ("*", pod.metadata.name):
+            click.echo(f"Deleting pod {pod.metadata.name} in namespace {namespace}")
+            client.CoreV1Api().delete_namespaced_pod(name=pod.metadata.name, namespace=namespace, propagation_policy="Foreground",)
+
 pod.add_command(root_execute)
+pod.add_command(create_network_pod)
+pod.add_command(list_network_pod)
+pod.add_command(delete_network_pod)
 pod.add_command(get_container_id)
