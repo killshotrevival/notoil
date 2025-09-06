@@ -4,7 +4,7 @@ import click
 
 ################################################### Project Import #################################
 
-from .pod import pod
+from .pod import root_execute, create_network_pod, list_network_pod, delete_network_pod, match_pod
 
 
 ################################################### Main Declaration ###############################
@@ -24,5 +24,8 @@ def kubernetes_main():
     """
     pass
 
-# Add pod subcommand to the kubernetes command group
-kubernetes_main.add_command(pod)
+kubernetes_main.add_command(root_execute)
+kubernetes_main.add_command(create_network_pod)
+kubernetes_main.add_command(list_network_pod)
+kubernetes_main.add_command(delete_network_pod)
+kubernetes_main.add_command(match_pod)

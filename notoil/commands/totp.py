@@ -12,7 +12,7 @@ import click
 
 
 @click.command(help="Generate a TOTP token")
-@click.argument("secret", type=click.STRING)
+@click.argument("secret", type=click.STRING, help="Secret key to use for the TOTP token")
 def get_totp(secret):
     """
     Generate a TOTP token

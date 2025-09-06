@@ -13,8 +13,8 @@ import click
 
 
 @click.command(help="Check if an IP address is present inside a subnet or not")
-@click.argument("ip", type=click.STRING)
-@click.argument("net", type=click.STRING)
+@click.argument("ip", type=click.STRING, help="IP address to test")
+@click.argument("net", type=click.STRING, help="Network to test the IP against")
 def ip_network(ip, net):
     """Can be used for checking if a IP string is present in a network or not
 
