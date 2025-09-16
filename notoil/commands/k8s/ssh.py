@@ -1,7 +1,7 @@
 
 ################################################### Python Import ##################################
 
-from kubernetes import client, config
+from kubernetes import client
 
 ################################################### Project Import #################################
 

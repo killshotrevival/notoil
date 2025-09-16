@@ -22,7 +22,6 @@ def kubernetes_main():
         notoil k8s pod exec          # Execute commands in pods
         notoil k8s pod ssh           # SSH into pods
     """
-    pass
 
 kubernetes_main.add_command(root_execute)
 kubernetes_main.add_command(create_network_pod)

@@ -1,30 +1,20 @@
 ################################################### Python Import ##################################
 
-import click
 import subprocess
 from time import sleep
 from uuid import uuid4
 
+import click
+
 from kubernetes import client, config
-from kubernetes.client.api import core_v1_api
 
 ################################################### Project Import #################################
 
+from notoil.utils.generate import generate_random_string
+
 from .ssh import ssh_into_node
-from notoil.utils.random import generate_random_string
 
 ################################################### Main Declaration ###############################
-
-
-# @click.group(name="pod", help="List of pod related commands")
-# def pod():
-#     """CLI group for pod-related commands in Kubernetes.
-    
-#     This group provides various utilities for interacting with Kubernetes pods,
-#     including container ID extraction and root execution capabilities.
-#     """
-#     pass
-
 
 def root_execute_in_container(cnt: client.V1ContainerStatus, node_name: str, shell: str = "bash"):
     """Execute commands as root user in a specified pod container.
@@ -55,14 +45,15 @@ def root_execute_in_container(cnt: client.V1ContainerStatus, node_name: str, she
     subprocess.call(["kubectl", "exec", "-it", pod_name, "-n", "kube-system", "--", "bash", "-c", command])
 
     print("Root execute completed, killing the pod")
-    
+
     client.CoreV1Api().delete_namespaced_pod(name=pod_name, namespace="kube-system", propagation_policy="Foreground",)
 
 
 
 @click.command(name="re", help="Create command to execute into pod as root user")
 @click.argument("pod", type=click.STRING)
-@click.option("--container", '-c', type=click.STRING, default="first-container", help="Name of the container to execute the command in, if not provided, the command will be executed in the first container")
+@click.option("--container", '-c', type=click.STRING, default="first-container", \
+              help="Name of the container to execute the command in, if not provided, the command will be executed in the first container")
 @click.option("--namespace", '-n', type=click.STRING, default="default", help="Namespace of the pod")
 @click.option("--shell", "-s", type=click.STRING, default="bash", help="Shell to use for the command")
 def root_execute(pod: str, container: str, namespace: str = "default", shell: str = "bash"):
@@ -126,7 +117,7 @@ def create_network_pod(namespace: str = "default"):
         None: Creates a network pod
     """
     config.load_config()
-    
+
     pod = client.CoreV1Api().create_namespaced_pod(
         namespace=namespace,
         body=client.V1Pod(
@@ -141,7 +132,7 @@ def create_network_pod(namespace: str = "default"):
         ),
         spec=client.V1PodSpec(
             containers=[client.V1Container(
-                name="network", 
+                name="network",
                 image="jonlabelle/network-tools",
                 command=["sleep", "infinity"]
             )]
