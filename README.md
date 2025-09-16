@@ -30,17 +30,19 @@ Quickly validate IP addresses against CIDR blocks. Critical for firewall rules, 
 
 #### Pod Management
 ```bash
-# Extract container IDs for debugging and monitoring
-notoil k8s pod container-id <pod_name> [--namespace <ns>] [--container-name <container>]
+Usage: notoil k8s [OPTIONS] COMMAND [ARGS]...
 
-# Execute commands as root user in containers
-notoil k8s pod root-exec <pod_name> <container_name> [--namespace <ns>]
-```
+  Kubernetes commands
 
-#### Advanced Node Access
-```bash
-# SSH into Kubernetes nodes for emergency debugging
-notoil k8s ssh <node_name>
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  cnp  Create a network pod
+  dnp  Delete a network pod
+  lnp  List all network pods in a namespace
+  mp   Match a pod by name (substring) in a namespace
+  re   Create command to execute into pod as root user
 ```
 
 ## Architecture & Design Principles
