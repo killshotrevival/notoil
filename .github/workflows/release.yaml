@@ -1,8 +1,10 @@
 name: Release Build 🚀
 
+run-name: 🚀 ${{ github.actor }} Building building NoToil 🚀
+
 on:
   push: 
-    tag:
+    tags:
     - "v*"
 
 jobs:
