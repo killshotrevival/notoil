@@ -1,6 +1,8 @@
 name: "Linting and UT Checks"
 on:
   push:
+    tags-ignore:
+      - "v*"
   workflow_call:
 
 jobs:
