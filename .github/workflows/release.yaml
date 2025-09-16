@@ -1,6 +1,6 @@
 name: Release Build 🚀
 
-run-name: 🚀 ${{ github.actor }} Building building NoToil 🚀
+run-name: 🚀 ${{ github.actor }} Building NoToil 🚀
 
 on:
   push: 
