@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/check.yaml
     secrets: inherit
 
-  CliBuild:
+  LinuxBuild:
     needs: Checks
     runs-on: ubuntu-latest
     permissions:
@@ -33,13 +33,45 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Package CLI
-        run: pyinstaller --onefile notoil.py
+        run: pyinstaller --onefile notoil.py --name notoil-linux
 
       - name: Test Cli
-        run: ./dist/notoil --help
+        run: ./dist/notoil-linux --help
 
       - name: Push Artifacts
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/notoil
+            dist/notoil-linux
+
+  MacBuild:
+    needs: Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Python Setup
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: Dependency Install
+        run: pip install -r requirements.txt
+
+      - name: Package CLI
+        run: pyinstaller --onefile notoil.py --name notoil-mac
+
+      - name: Test Cli
+        run: ./dist/notoil-mac --help
+
+      - name: Push Artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/notoil-mac
