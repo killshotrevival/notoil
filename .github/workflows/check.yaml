@@ -1,3 +1,4 @@
+name: "Linting and UT Checks"
 on:
   push:
   workflow_call:
